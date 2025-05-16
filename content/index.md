@@ -1,6 +1,5 @@
 ---
-title: Welcome to Quartz
+title: StyxIN Wiki
 ---
 
-This is a blank Quartz installation.
-See the [documentation](https://quartz.jzhao.xyz) for how to get started.
+This is a StyxIN wiki. Here you can find homebrew rules and other info about the world.
