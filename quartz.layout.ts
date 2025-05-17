@@ -44,6 +44,7 @@ export const defaultContentPageLayout: PageLayout = {
     Component.Graph({
       localGraph: {
         depth: 2,
+        enableRadial: true,
       },
     }),
     Component.DesktopOnly(Component.TableOfContents()),
