@@ -4,8 +4,8 @@ title: StyxIN Wiki
 This is a StyxIN wiki. Here you can find homebrew rules and other info about the world.
 
 <!-- LINKS START -->
-- [[_Известные места и местности|_Известные места и местности]]
-- [[_Известные создания|_Известные создания]]
-- [[_Квесты|_Квесты]]
-- [[_Правила классов|_Правила классов]]
+- [[content/Известные места и местности/index|index]]
+- [[content/Известные создания/index|index]]
+- [[content/Квесты/index|index]]
+- [[content/Правила классов/index|index]]
 <!-- LINKS END -->
