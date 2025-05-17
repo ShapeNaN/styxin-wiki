@@ -1,6 +1,3 @@
----
-title:
----
 <%*
 const vault = app.vault;
 const folderPath = tp.file.folder(true);

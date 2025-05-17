@@ -1,6 +1,5 @@
 import { QuartzConfig } from "./quartz/cfg"
 import * as Plugin from "./quartz/plugins"
-import { defaultImage } from "./quartz/util/og"
 
 /**
  * Quartz 4 Configuration
@@ -17,7 +16,7 @@ const config: QuartzConfig = {
       provider: "plausible",
     },
     locale: "en-US",
-    baseUrl: "quartz.jzhao.xyz",
+    baseUrl: "shapenan.github.io/styxin-wiki",
     ignorePatterns: ["private", "templates", ".obsidian"],
     defaultDateType: "modified",
     theme: {
@@ -95,7 +94,6 @@ const config: QuartzConfig = {
         width: 1200, // width to generate with (in pixels)
         height: 630, // height to generate with (in pixels)
         excludeRoot: false, // wether to exclude "/" index path to be excluded from auto generated images (false = use auto, true = use default og image)
-        imageStructure: defaultImage, // custom image component to use
       }),
     ],
   },
