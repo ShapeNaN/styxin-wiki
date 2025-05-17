@@ -1,5 +1,5 @@
-// update‑folder‑notes.js
-// Run from vault root:  node update-folder-notes.js
+// update-folder-notes.cjs
+// Run from vault root:  node update-folder-notes.cjs
 
 console.log("Current working directory:", process.cwd());
 
@@ -12,8 +12,25 @@ const CONTENT_DIR = path.join(VAULT_ROOT, "content");
 const START = "<!-- LINKS START -->";
 const END   = "<!-- LINKS END -->";
 
-function isMD(p)       { return p.toLowerCase().endsWith(".md"); }
-function mdLink(p)     { return p.replace(/\\/g, "/"); }
+function isMD(p) { 
+  return p.toLowerCase().endsWith(".md"); 
+}
+
+// Converts absolute paths to Obsidian link paths:
+// - Normalize slashes
+// - Remove leading 'content/'
+// - Remove '.md' extension
+function mdLink(p) {
+  return p
+    .replace(/\\/g, "/")
+    .replace(/^content\//, "")
+    .replace(/\.md$/, "");
+}
+
+// Returns just the file name without extension
+function fileNameOnly(p) {
+  return path.basename(p, ".md");
+}
 
 function walk(dir, cb) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -25,23 +42,30 @@ function walk(dir, cb) {
 function processFolder(folderPath) {
   const folderName = path.basename(folderPath);
   const notePath = path.join(folderPath, `${folderName}.md`);
-  if (!fs.existsSync(notePath)) return;                       // no folder note → skip
+  if (!fs.existsSync(notePath)) return; // no folder note → skip
 
   const entries = fs.readdirSync(folderPath, { withFileTypes: true });
 
   // local files (direct children, md, not the folder note)
   const localLinks = entries
     .filter(e => e.isFile() && isMD(e.name) && e.name !== `${folderName}.md`)
-    .map(e => `- [[${mdLink(path.relative(VAULT_ROOT, path.join(folderPath, e.name)))}]]`);
+    .map(e => {
+      const fullPath = path.join(folderPath, e.name);
+      const relativePath = mdLink(path.relative(VAULT_ROOT, fullPath));
+      const displayName = fileNameOnly(e.name);
+      return `- [[${relativePath}|${displayName}]]`;
+    });
 
   // direct subfolders’ notes
   const subLinks = entries
     .filter(e => e.isDirectory())
     .map(dir => {
       const subNote = path.join(folderPath, dir.name, `${dir.name}.md`);
-      return fs.existsSync(subNote)
-        ? `- [[${mdLink(path.relative(VAULT_ROOT, subNote))}|${dir.name}]]`
-        : null;
+      if (!fs.existsSync(subNote)) return null;
+      const relativePath = mdLink(path.relative(VAULT_ROOT, subNote));
+      // display the folder name as before
+      const displayName = dir.name;
+      return `- [[${relativePath}|${displayName}]]`;
     })
     .filter(Boolean);
 
@@ -60,7 +84,7 @@ function processFolder(folderPath) {
 
 // ---- main ----
 walk(CONTENT_DIR, p => {
-  // for each .md we encounter, we only act when it’s X/X.md; so just look at its folder
+  // for each .md we encounter, only act when it’s X/X.md; so just look at its folder
   if (isMD(p)) {
     const parent = path.dirname(p);
     processFolder(parent);
