@@ -47,17 +47,17 @@ If you're still having trouble, feel free to [submit an issue](https://github.co
 
 
 <!-- LINKS START -->
-- [[_advanced]]
+- [[-advanced]]
 - [[authoring content]]
 - [[build]]
 - [[configuration]]
-- [[_features]]
+- [[-features]]
 - [[hosting]]
 - [[layout]]
 - [[layout-components]]
 - [[migrating from Quartz 3]]
 - [[philosophy]]
-- [[_plugins]]
+- [[-plugins]]
 - [[setting up your GitHub repository]]
 - [[showcase]]
 - [[upgrading]]
