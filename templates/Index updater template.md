@@ -2,7 +2,7 @@
 const vault = app.vault;
 const folderPath = tp.file.folder(true);
 const folderName = folderPath.split("/").pop();
-const indexPath = `${folderPath}/${folderName}.md`; // Folder note file
+const indexPath = `${folderPath}/index.md`; // Folder note file assumed to be 'index.md'
 
 // Helper: remove leading 'content/' and strip '.md'
 function mdLink(p) {
@@ -14,11 +14,11 @@ function mdLink(p) {
 // Get all files in vault
 const allFiles = vault.getFiles();
 
-// Get all files directly inside the folder (excluding the folder note itself)
+// Get all files directly inside the folder (excluding 'index.md' folder note)
 const filesInFolder = allFiles.filter(f =>
     f.parent?.path === folderPath &&
     f.extension === "md" &&
-    f.basename !== folderName
+    f.basename !== "index"  // explicitly exclude index.md
 );
 
 // Get all direct subfolders inside this folder
@@ -31,24 +31,24 @@ const directSubfolders = [...new Set(
         })
 )];
 
-// Get folder notes of subfolders
+// Get folder notes (index.md) of subfolders
 const subfolderNotes = directSubfolders.map(subfolderName => {
     const subfolderPath = `${folderPath}/${subfolderName}`;
-    const notePath = `${subfolderPath}/${subfolderName}.md`;
+    const notePath = `${subfolderPath}/index.md`;  // folder note named index.md
     return allFiles.find(f => f.path === notePath);
 }).filter(f => f !== undefined);
 
-// Build file links with relative path and display just basename
+// Build file links with relative path and display basename
 const fileLinks = filesInFolder.map(f => {
     const relativePath = mdLink(f.path);
     const displayName = f.basename;
     return `- [[${relativePath}|${displayName}]]`;
 });
 
-// Build folder note links with relative path and folder name as display
+// Build folder note links with relative path and folder name as alias
 const folderIndexLinks = subfolderNotes.map(f => {
     const relativePath = mdLink(f.path);
-    const displayName = f.parent.name;
+    const displayName = f.parent.name;  // folder name as alias
     return `- [[${relativePath}|${displayName}]]`;
 });
 
@@ -80,5 +80,5 @@ if (content.includes(startMarker) && content.includes(endMarker)) {
 
 // Write updated note content
 await vault.modify(indexFile, content);
-new Notice(`Updated ${fileLinks.length + folderIndexLinks.length} links in ${folderName}.md`);
+new Notice(`Updated ${fileLinks.length + folderIndexLinks.length} links in index.md`);
 %>

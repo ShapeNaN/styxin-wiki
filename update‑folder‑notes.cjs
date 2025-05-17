@@ -41,14 +41,14 @@ function walk(dir, cb) {
 
 function processFolder(folderPath) {
   const folderName = path.basename(folderPath);
-  const notePath = path.join(folderPath, `${folderName}.md`);
+  const notePath = path.join(folderPath, `index.md`);  // <-- folder note is now 'index.md'
   if (!fs.existsSync(notePath)) return; // no folder note → skip
 
   const entries = fs.readdirSync(folderPath, { withFileTypes: true });
 
-  // local files (direct children, md, not the folder note)
+  // local files (direct children, md, not the folder note 'index.md')
   const localLinks = entries
-    .filter(e => e.isFile() && isMD(e.name) && e.name !== `${folderName}.md`)
+    .filter(e => e.isFile() && isMD(e.name) && e.name !== `index.md`) // exclude index.md explicitly
     .map(e => {
       const fullPath = path.join(folderPath, e.name);
       const relativePath = mdLink(path.relative(VAULT_ROOT, fullPath));
@@ -56,14 +56,14 @@ function processFolder(folderPath) {
       return `- [[${relativePath}|${displayName}]]`;
     });
 
-  // direct subfolders’ notes
+  // direct subfolders’ notes, assumed index.md inside each subfolder
   const subLinks = entries
     .filter(e => e.isDirectory())
     .map(dir => {
-      const subNote = path.join(folderPath, dir.name, `${dir.name}.md`);
+      const subNote = path.join(folderPath, dir.name, `index.md`);  // <-- folder note is index.md
       if (!fs.existsSync(subNote)) return null;
       const relativePath = mdLink(path.relative(VAULT_ROOT, subNote));
-      // display the folder name as before
+      // display the folder name as alias
       const displayName = dir.name;
       return `- [[${relativePath}|${displayName}]]`;
     })
