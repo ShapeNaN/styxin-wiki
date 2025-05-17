@@ -2,7 +2,7 @@
 const vault = app.vault;
 const folderPath = tp.file.folder(true);
 const folderName = folderPath.split("/").pop();
-const indexPath = `${folderPath}/${folderName}.md`;
+const indexPath = `${folderPath}/index.md`;
 
 // Get all files in vault
 const allFiles = vault.getFiles();
@@ -11,7 +11,7 @@ const allFiles = vault.getFiles();
 const filesInFolder = allFiles.filter(f =>
     f.parent?.path === folderPath &&
     f.extension === "md" &&
-    f.basename !== folderName
+    f.basename !== "index"
 );
 
 // Get all direct subfolders by looking at parent folders of files
@@ -19,25 +19,31 @@ const directSubfolders = [...new Set(
     allFiles
         .filter(f => f.parent?.path?.startsWith(folderPath + "/"))
         .map(f => {
-            // get first-level subfolder relative to folderPath
             const rel = f.parent.path.slice(folderPath.length + 1);
             return rel.split("/")[0];
         })
 )];
 
-// Now get index files of those subfolders
+// Get index.md files of direct subfolders
 const subfolderIndexes = directSubfolders.map(subfolderName => {
     return allFiles.find(f =>
-        f.parent?.path === folderPath + "/" + subfolderName &&
-        f.basename === subfolderName
+        f.parent?.path === `${folderPath}/${subfolderName}` &&
+        f.basename === "index"
     );
 }).filter(f => f !== undefined);
 
-// Combine regular files and subfolder index files
-const allLinks = [
-    ...filesInFolder.map(f => f.basename),
-    ...subfolderIndexes.map(f => f.basename)
-].sort((a, b) => a.localeCompare(b));
+// Generate link markdown
+const fileLinks = filesInFolder.map(f => `- [[${f.basename}]]`);
+
+const folderIndexLinks = subfolderIndexes.map(f => {
+    const folderName = f.parent.name;
+    const linkPath = `${f.parent.path}/index`;
+    return `- [[${linkPath}|${folderName}]]`;
+});
+
+const allLinksMarkdown = [...fileLinks, ...folderIndexLinks]
+    .sort((a, b) => a.localeCompare(b))
+    .join("\n");
 
 // Read existing index file content or empty string
 let indexFile = vault.getAbstractFileByPath(indexPath);
@@ -53,8 +59,7 @@ if (indexFile) {
 const startMarker = "<!-- LINKS START -->";
 const endMarker = "<!-- LINKS END -->";
 
-const newLinksMarkdown = allLinks.map(name => `- [[${name}]]`).join("\n");
-const newSection = `${startMarker}\n${newLinksMarkdown}\n${endMarker}`;
+const newSection = `${startMarker}\n${allLinksMarkdown}\n${endMarker}`;
 
 // Replace existing section or append
 if (content.includes(startMarker) && content.includes(endMarker)) {
@@ -67,5 +72,5 @@ if (content.includes(startMarker) && content.includes(endMarker)) {
 // Write updated content back to index file
 await vault.modify(indexFile, content);
 
-new Notice(`Updated ${allLinks.length} links in ${folderName}.md`);
+new Notice(`Updated ${fileLinks.length + folderIndexLinks.length} links in index.md`);
 %>
