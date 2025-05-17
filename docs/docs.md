@@ -44,3 +44,21 @@ For a comprehensive list of features, visit the [features page](./features/). Yo
 Having trouble with Quartz? Try searching for your issue using the search feature. If you haven't already, [[upgrading|upgrade]] to the newest version of Quartz to see if this fixes your issue.
 
 If you're still having trouble, feel free to [submit an issue](https://github.com/jackyzha0/quartz/issues) if you feel you found a bug or ask for help in our [Discord Community](https://discord.gg/cRFFHYye7t).
+
+
+<!-- LINKS START -->
+- [[advanced]]
+- [[authoring content]]
+- [[build]]
+- [[configuration]]
+- [[features]]
+- [[hosting]]
+- [[layout]]
+- [[layout-components]]
+- [[migrating from Quartz 3]]
+- [[philosophy]]
+- [[plugins]]
+- [[setting up your GitHub repository]]
+- [[showcase]]
+- [[upgrading]]
+<!-- LINKS END -->
