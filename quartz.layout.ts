@@ -45,16 +45,16 @@ export const defaultContentPageLayout: PageLayout = {
       localGraph: {
         depth: 2,
         enableRadial: true,
-        repelForce: 0.6, // how much nodes should repel each other
+        repelForce: 0.7, // how much nodes should repel each other
         centerForce: 0.2, // how much force to use when trying to center the nodes
         linkDistance: 40, // how long should the links be by default?
         fontSize: 0.6, // what size should the node labels be?
       },
       globalGraph: {
         enableRadial: true,
-        repelForce: 0.6, // how much nodes should repel each other
+        repelForce: 0.8, // how much nodes should repel each other
         centerForce: 0.2, // how much force to use when trying to center the nodes
-        linkDistance: 40, // how long should the links be by default?
+        linkDistance: 50, // how long should the links be by default?
         fontSize: 0.4,
       },
     }),
