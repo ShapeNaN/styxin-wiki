@@ -45,6 +45,10 @@ export const defaultContentPageLayout: PageLayout = {
       localGraph: {
         depth: 2,
         enableRadial: true,
+        repelForce: 0.6, // how much nodes should repel each other
+        centerForce: 0.2, // how much force to use when trying to center the nodes
+        linkDistance: 40, // how long should the links be by default?
+        fontSize: 0.4, // what size should the node labels be?
       },
     }),
     Component.DesktopOnly(Component.TableOfContents()),
